@@ -5,22 +5,40 @@
 
 import csv
 import os
+from datetime import date
+
+
+def getInt(msg):
+    data = input(msg)
+    try:
+        return int(data)
+    except ValueError:
+        print('Error: Input must be an integer!')
+        return getInt(msg)
+
+
+def getFloat(msg):
+    data = input(msg)
+    try:
+        return float(data)
+    except ValueError:
+        print('Error: Input must be an integer!')
+        return getInt(msg)
 
 
 def uniqueID():
-    f = open('Patient.csv', 'r', newline='\r\n')
-    s = csv.reader(f)
+    file = open('Patient.csv', 'r', newline='\r\n')
+    read = csv.reader(file)
 
-    id = int(input('Enter Patient ID: '))
+    id = getInt('Enter Patient ID: ')
     exist = 0
-    for rec in s:
-        if int(rec[0]) == id:
+    for record in read:
+        if int(record[0]) == id:
             exist += 1
     if exist != 0:
-        print('Patient with ID', id, 'already exists!')
+        print('Error: Patient with ID', id, 'already exists!')
         uniqueID()
-
-    f.close()
+    file.close()
     return id
 
 
@@ -28,42 +46,42 @@ def newPatient():
     print("Add a new Patient Record")
     print("=========================")
 
-    f = open('Patient.csv', 'a', newline='\r\n')
-    s = csv.writer(f)
+    file = open('Patient.csv', 'a', newline='\r\n')
+    write = csv.writer(file)
 
     id = uniqueID()
     name = input('Enter Patient Name: ')
     illness = input('Enter Illness: ')
-    fee = float(input('Enter Fee: '))
+    fee = getFloat('Enter Fee: ')
     doctor = input('Enter name of Doctor: ')
 
     print("----------------------------------------------------")
 
-    rec = [id, name, illness, fee, doctor]
-    s.writerow(rec)
-    f.close()
-    print("Patient Record Saved")
-    input("Press any key to continue...")
+    record = [id, date.today(), name, illness, fee, doctor]
+    write.writerow(record)
+    file.close()
+    print("Info: Patient Record Saved")
 
 
 def editPatient():
     print("Modify a Patient Record")
     print("=========================")
 
-    f = open('Patient.csv', 'r', newline='\r\n')
-    f1 = open('temp.csv', 'a', newline='\r\n')
-    s = csv.reader(f)
-    s1 = csv.writer(f1)
+    file_r = open('Patient.csv', 'r', newline='\r\n')
+    file_w = open('temp.csv', 'a', newline='\r\n')
+    read = csv.reader(file_r)
+    write = csv.writer(file_w)
 
-    id = int(input('Enter ID of Patient whose record is to be modified: '))
+    id = getInt('Enter ID of Patient whose record is to be modified: ')
     exist = 0
-    for rec in s:
-        if int(rec[0]) == id:
+    for record in read:
+        if int(record[0]) == id:
             exist += 1
-            name = rec[1]
-            illness = rec[2]
-            fee = rec[3]
-            doctor = rec[4]
+            date = record[1]
+            name = record[2]
+            illness = record[3]
+            fee = record[4]
+            doctor = record[5]
 
             print("-------------------------------")
             print("(1) Patient Name:", name)
@@ -72,122 +90,172 @@ def editPatient():
             print("(4) Name of Doctor:", doctor)
             print("-------------------------------")
 
-            choice = int(input("Enter your Choice: "))
+            choice = getInt("Enter your Choice: ")
             if choice == 1:
                 name = input('Enter new Patient Name: ')
             elif choice == 2:
                 illness = input('Enter Illness: ')
             elif choice == 3:
-                fee = float(input('Enter Fee: '))
+                fee = getFloat('Enter Fee: ')
             elif choice == 4:
                 doctor = input('Enter name of Doctor: ')
             else:
-                print('Patient Record is unchanged!')
+                print('Info: Patient Record is unchanged!')
 
-            rec = [id, name, illness, fee, doctor]
-            s1.writerow(rec)
+            record = [id, date, name, illness, fee, doctor]
+            write.writerow(record)
 
             if 1 <= choice <= 4:
-                print("Patient Record Modified!")
+                print("Info: Patient Record Modified!")
         else:
-            s1.writerow(rec)
+            write.writerow(record)
 
     if exist == 0:
-        print('Patient with ID', id, 'does not exist!')
+        print('Error: Patient with ID', id, 'does not exist!')
 
-    f.close()
-    f1.close()
+    file_r.close()
+    file_w.close()
     os.remove("Patient.csv")
     os.rename("temp.csv", "Patient.csv")
-    input("Press any key to continue...")
 
 
 def delPatient():
     print("Delete a Patient Record")
     print("=========================")
 
-    f = open('Patient.csv', 'r', newline='\r\n')
-    f1 = open('temp.csv', 'a', newline='\r\n')
-    s = csv.reader(f)
-    s1 = csv.writer(f1)
+    file_r = open('Patient.csv', 'r', newline='\r\n')
+    file_w = open('temp.csv', 'a', newline='\r\n')
+    read = csv.reader(file_r)
+    write = csv.writer(file_w)
 
-    id = int(input('Enter ID of Patient whose record is to be deleted: '))
+    id = getInt('Enter ID of Patient whose record is to be deleted: ')
     exist = 0
-    for rec in s:
-        if int(rec[0]) == id:
+    for record in read:
+        if int(record[0]) == id:
             exist += 1
             print("-------------------------------")
-            print("Patient Name:", rec[1])
-            print("Illness:", rec[2])
-            print("Fee:", rec[3])
-            print("Name of Doctor:", rec[4])
+            print("Day of Registration:", record[1])
+            print("Patient Name:", record[2])
+            print("Illness:", record[3])
+            print("Fee:", record[4])
+            print("Name of Doctor:", record[5])
             print("-------------------------------")
 
             choice = input("Do you want to delete the above record (y/n): ")
             if choice == 'y' or choice == 'Y':
                 pass
-                print("Patient Record Deleted!")
+                print("Info: Patient Record Deleted!")
             else:
-                s1.writerow(rec)
+                print('Info: Patient Record is unchanged!')
+                write.writerow(record)
         else:
-            s1.writerow(rec)
+            write.writerow(record)
 
     if exist == 0:
-        print('Patient with ID', id, 'does not exist!')
+        print('Error: Patient with ID', id, 'does not exist!')
 
-    f.close()
-    f1.close()
+    file_r.close()
+    file_w.close()
     os.remove("Patient.csv")
     os.rename("temp.csv", "Patient.csv")
-    input("Press any key to continue...")
 
 
 def searchPatient():
     print("Search a Patient Record")
     print("=======================")
 
-    f = open('Patient.csv', 'r', newline='\r\n')
-    s = csv.reader(f)
+    file = open('Patient.csv', 'r', newline='\r\n')
+    read = csv.reader(file)
 
-    id = int(input('Enter ID to search for Patient: '))
+    id = getInt('Enter ID to search for Patient: ')
     exist = 0
-    for rec in s:
-        if int(rec[0]) == id:
+    for record in read:
+        if int(record[0]) == id:
             exist += 1
             print("-------------------------------")
-            print("Patient Name:", rec[1])
-            print("Illness:", rec[2])
-            print("Fee:", rec[3])
-            print("Name of Doctor", rec[4])
+            print("Day of Registration:", record[1])
+            print("Patient Name:", record[2])
+            print("Illness:", record[3])
+            print("Fee:", record[4])
+            print("Name of Doctor", record[5])
             print("-------------------------------")
     if exist == 0:
-        print('Patient with ID', id, 'does not exist!')
-
-    f.close()
-    input("Press any key to continue...")
+        print('Error: Patient with ID', id, 'does not exist!')
+    file.close()
 
 
 def listPatients():
-    print("=======================================================================")
-    print("                         List of All Patients")
-    print("=======================================================================")
+    choice = 0
+    while choice != 3:
+        print("(1) List All Patients")
+        print("(2) List Patients by Day")
+        print("(3) Return to Main Menu")
 
-    f = open('Patient.csv', 'r', newline='\r\n')
-    s = csv.reader(f)
-    count = 0
+        print("--------------------------------")
+        choice = getInt('Enter your Choice: ')
+        print("--------------------------------", end="\n")
 
-    print("ID\t\tNAME\t\tILLNESS\t\tFEE\t\tDOCTOR")
-    for rec in s:
-        print(rec[0], end="\t\t")
-        print(rec[1], end="\t\t")
-        print(rec[2], end="\t\t")
-        print(rec[3], end="\t\t")
-        print(rec[4])
-        count += 1
-    print("------------------------------------------------------------------------")
-    print('Total: ', count, end="\n")
+        file = open('Patient.csv', 'r', newline='\r\n')
+        read = csv.reader(file)
 
-    f.close()
+        if choice == 1:
+            print("====================================================================================================")
+            print("                                       List of All Patients")
+            print("====================================================================================================")
+
+            count = 0
+            print("ID\t\tDATE\t\t\tNAME\t\tILLNESS\t\tFEE\t\tDOCTOR")
+            for record in read:
+                print(record[0], end="\t\t")
+                print(record[1], end="\t\t")
+                print(record[2], end="\t\t")
+                print(record[3], end="\t\t")
+                print(record[4], end="\t\t")
+                print(record[5])
+                count += 1
+            print("----------------------------------------------------------------------------------------------------")
+            print('Total: ', count, end="\n")
+            break
+
+        elif choice == 2:
+            day = input('Enter Day of Registration (YYYY-MM-DD): ')
+            count = 0
+            for record in read:
+                if record[1] == day:
+                    count += 1
+            if count == 0:
+                print('Info: No Patients were registered on', day)
+                break
+            file.seek(0)
+
+            print("=======================================================================")
+            print("                   List of Patients registered on", day)
+            print("=======================================================================")
+
+            print("ID\t\tNAME\t\tILLNESS\t\tFEE\t\tDOCTOR")
+            for record in read:
+                if record[1] == day:
+                    print(record[0], end="\t\t")
+                    print(record[2], end="\t\t")
+                    print(record[3], end="\t\t")
+                    print(record[4], end="\t\t")
+                    print(record[5])
+            print(
+                "-----------------------------------------------------------------------")
+            print('Total: ', count, end="\n")
+            break
+
+        elif choice == 3:
+            break
+        else:
+            print("Error: Invalid choice, please choose again")
+            file.close()
+            listPatients()
+            break
+        file.close()
+
+
+def keypress():
     input("Press any key to continue...")
 
 
@@ -200,33 +268,40 @@ def menu():
         print("| ---------------------------|")
         print('\n')
 
-        print("#############################")
+        print("=============================")
         print("            MENU")
-        print("#############################")
+        print("=============================")
         print("(1) Add a new Patient Record")
         print("(2) Modify Existing Patient")
         print("(3) Delete Existing Patient")
         print("(4) Search for Patient")
-        print("(5) List all Patients")
+        print("(5) List Patients")
         print("(6) Exit")
 
         print("--------------------------------")
-        choice = int(input('Enter your Choice: '))
-        print("--------------------------------")
+        choice = getInt('Enter your Choice: ')
+        print("--------------------------------", end="\n")
 
         if choice == 1:
             newPatient()
+            keypress()
         elif choice == 2:
             editPatient()
+            keypress()
         elif choice == 3:
             delPatient()
+            keypress()
         elif choice == 4:
             searchPatient()
+            keypress()
         elif choice == 5:
             listPatients()
+            keypress()
         elif choice == 6:
             print("System Exited...")
             break
+        else:
+            print("Error: Invalid choice, please choose again")
 
 
 menu()
