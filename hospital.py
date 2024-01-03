@@ -22,8 +22,8 @@ def getFloat(msg):
     try:
         return float(data)
     except ValueError:
-        print('Error: Input must be an integer!')
-        return getInt(msg)
+        print('Error: Input must be an floating point value!')
+        return getFloat(msg)
 
 
 def uniqueID():
