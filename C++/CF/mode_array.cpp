@@ -18,7 +18,7 @@ void solve()
     cin >> n;
     ll a[n];
     map<ll, ll> ma, mb;
-    for (int i = 0; i < n; i++)
+    for (ll i = 0; i < n; i++)
     {
         cin >> a[i];
         ma[a[i]]++;
@@ -27,12 +27,12 @@ void solve()
     }
 
     vector<ll> rand;
-    for (int i = 1; i <= n; i++)
+    for (ll i = 1; i <= n; i++)
         if (ma[i] == 0)
             rand.pb(i);
 
-    ll counter = 0;
-    for (int i = 0; i < n; i++)
+    ll counter{0};
+    for (ll i = 0; i < n; i++)
     {
         if (mb[a[i]] == 1)
         {
@@ -55,7 +55,5 @@ int main()
     ll loop;
     cin >> loop;
     while (loop--)
-    {
         solve();
-    }
 }

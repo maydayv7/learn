@@ -20,7 +20,5 @@ int main()
     ll loop;
     cin >> loop;
     while (loop--)
-    {
         solve();
-    }
 }
