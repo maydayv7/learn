@@ -12,6 +12,7 @@ void perf()
 
 void solve()
 {
+    cout << "Answer" << "\n";
 }
 
 int main()
