@@ -7,14 +7,14 @@ typedef vector<ll> vl;
 #define F first
 #define S second
 #define PB push_back
-#define FOR(i, a, b) for (ll i = a; i <= b; i++)
+#define FOR(n) for (int i = 0; i < n; i++)
 
 void solve()
 {
     ll n;
     cin >> n;
 
-    FOR(i, 0, n - 1)
+    FOR(n)
     cout << i << "\n";
 }
 
