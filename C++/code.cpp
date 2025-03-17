@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+#ifndef ONLINE_JUDGE
+#include "debug.h"
+#endif
+
 using namespace std;
 
 typedef long long ll;
@@ -13,6 +17,7 @@ void solve()
 {
     ll n;
     cin >> n;
+    deb(n);
 
     FOR(n)
     cout << i << "\n";
