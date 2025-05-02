@@ -11,7 +11,7 @@ typedef vector<ll> vl;
 #define F first
 #define S second
 #define PB push_back
-#define FOR(n) for (int i = 0; i < n; i++)
+#define FOR(n) for (ll i{0}; i < n; i++)
 
 void solve()
 {
