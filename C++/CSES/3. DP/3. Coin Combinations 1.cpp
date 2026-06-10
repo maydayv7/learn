@@ -2,6 +2,8 @@
 #define int long long
 using namespace std;
 
+const int MOD = 1e9 + 7;
+
 void solve()
 {
     int n, x;
@@ -10,13 +12,13 @@ void solve()
     for (int i = 0; i < n; i++)
         cin >> c[i];
 
-    int mod = 1e9 + 7;
     vector<int> dp(x + 1, 0);
     dp[0] = 1;
-    for (int i = 0; i < n; i++)
-        for (int j = 1; j <= x; j++)
+    // Outer loop = Sums -> Permutations
+    for (int j = 1; j <= x; j++)
+        for (int i = 0; i < n; i++)
             if (j >= c[i])
-                dp[j] = (dp[j] + dp[j - c[i]]) % mod;
+                dp[j] = (dp[j] + dp[j - c[i]]) % MOD;
 
     cout << dp[x] << endl;
 }
